@@ -2,15 +2,9 @@
 import rospy
 from uav_abstraction_layer.srv import TakeOff, Land
 from geometry_msgs.msg import Twist, TwistStamped, PoseStamped 
-from nav_msgs.msg import Path
 import time
 from numpy import linalg as LA
-import rospkg
-rospack = rospkg.RosPack()
 import math
-import json
-import threading
-
 
 class DroneNavigator:
 
@@ -70,14 +64,14 @@ class DroneNavigator:
             take_off_client = rospy.ServiceProxy(self.takeoff_srv_name_, TakeOff)
             take_off_client.call(self.height_,True)
         except rospy.ServiceException, e:
-            print "Service call failed: %s"%e
+            rospy.logwarn("Service call failed: %s"%e)
 
     def land(self):
         try:
             land_client = rospy.ServiceProxy(self.land_srv_name_, Land)
             land_client.call(True)
         except rospy.ServiceException, e:
-            print "Service call failed: %s"%e
+            rospy.logwarn("Service call failed: %s"%e)
 
     def mission_thread(self):
         threading.Thread(target=self.mission).start()
