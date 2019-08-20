@@ -1,0 +1,197 @@
+#!/usr/bin/env python
+import rospy
+from uav_abstraction_layer.srv import TakeOff, Land
+from geometry_msgs.msg import Twist, TwistStamped, PoseStamped 
+
+from auxiliar_functions import *
+from uav import UAV
+from algorithms import bf_minimize_max_deviation
+
+
+# This class is an interface with the actual drones. 
+
+class DroneNavigator:
+
+    #callback ual pose
+    def _dronePoseCallback(self,data):
+        self._pose = data
+
+    def getDronePose(self):
+        return self._pose 
+
+    def setDroneVel(self, vel):
+        self._vel.twist.linear.x = vel[0]
+        self._vel.twist.linear.y = vel[1]
+        self._vel.twist.linear.z = vel[2]
+        self._vel_pub(self._vel)    
+
+    #class initialization
+    def __init__(self, id, height):
+        
+        self._id = id
+        self._height = height
+
+        self._vel = TwistStamped()
+        self._vel_pub = rospy.Publisher(self._id + '/ual/set_velocity',TwistStamped,queue_size=1)
+        #self._pose_pub = rospy.Publisher(self._id+'/ual/set_pose',PoseStamped,queue_size=1)
+        
+        rospy.Subscriber(self._id + '/ual/pose',PoseStamped, self._dronePoseCallback,queue_size=1)
+    
+        self._takeoff_srv_name = self._id + '/ual/take_off'
+        self._land_srv_name = self._id + '/ual/land'
+
+        
+    def takeOff(self):
+        try:
+            take_off_client = rospy.ServiceProxy(self._takeoff_srv_name, TakeOff)
+            take_off_client.call(self._height,True)
+        except rospy.ServiceException, e:
+            rospy.logwarn("Service call failed: %s"%e)
+
+    def land(self):
+        try:
+            land_client = rospy.ServiceProxy(self._land_srv_name, Land)
+            land_client.call(True)
+        except rospy.ServiceException, e:
+            rospy.logwarn("Service call failed: %s"%e)
+
+
+# This class implements the central controller resolving all conflicts and commading drones.
+
+class CentralController:
+
+    def __init__(self):
+
+        # Reading conf parameters    
+        conf_error = False
+
+        if(rospy.has_param('~n_drones')):
+            self._n_drones = rospy.get_param('~n_drones')
+        else:
+            conf_error = True
+
+        if(rospy.has_param('~heights')):
+            self._heights = rospy.get_param('~heights')
+        else:
+            conf_error = True
+        
+        if(rospy.has_param('~goals')):
+            self._goals = rospy.get_param('~goals')
+        else:
+            conf_error = True
+        
+        if(conf_error):
+            rospy.logerr("Missing basic configuration parameters.")
+        elif(len(self._heights) < self._n_drones or len(self._goals) < self._n_drones):
+            rospy.logerr("Missing parameters for some drones.")
+        else:
+
+            # Create drone navigators
+            self._navigators = []
+            for i in range(self._n_drones):
+                self._navigators.append(DroneNavigator('uav_' + str(i+1), self._heights[i])
+
+
+            # Reading algorithm parameters
+            self._uav_radius = rospy.get_param('~uav_radius', 5.0)          # Radius of the UAVs
+            self._k = rospy.get_param('~n_directions', 10)                  # Number of directions per UAV
+            self._time_horizon = rospy.get_param('~time_horizon', 10)       # Time horizon (seconds)
+            self._max_deviation = rospy.get_param('~max_deviation', 0.785)  # Maximum deviation allowed (radians)
+            self._rate = rospy.get_param('~rate',10)                        # Node rate (Hz)
+            self._speed = rospy.get_param('~nominal_speed', 1.0)            # Nominal speed for UAVs (m/s)
+
+            # Create UAVs models
+            self._uavs = []
+            for id in range(self._n_drones):
+                self._uavs.append(UAV((0,0,0),self._speed,self._uav_radius,(1,1,1),self._goals[id]))
+            
+            self._uavs_idx = range(self._n_drones)
+
+    # Main thread
+    def execute(self):
+
+        detect_method = lambda UAV1, d1, UAV2, d2 : is_collision_on_interval(UAV1, d1, UAV2, d2, self._time_horizon)
+        cost_function = lambda x, y: abs(vector2angles(x)[0] -  vector2angles(y)[0])
+        vect_dist = vectors_distance_by_components
+        ac_method = bf_minimize_max_deviation
+
+        # Takeoff drones
+        rospy.loginfo("Taking off drones.")
+
+        for i in range(self._n_drones):
+                self._navigators[i].takeOff()
+
+        print "\nPress a key to start the mission:\n"
+        key = raw_input(" >> ")
+    
+        rate = rospy.Rate(self._rate) 
+        while self._uavs and not rospy.is_shutdown():
+            
+            # Update UAVs positions
+            arrived = []    
+            for id,uav in enumerate(self._uavs):
+
+                pos = self._navigators[self._uavs_idx[id]].getDronePose()
+                uav.position[0] = pos.pose.position.x
+                uav.position[1] = pos.pose.position.y
+                uav.position[2] = pos.pose.position.z
+
+                uav.direction = uav.get_optimal_direction()
+
+                # Check drones at goal
+                if(vect_dist(uav.position, uav.goal_point) < 1.5):
+                    arrived.append(id)
+
+            # Removed drones at goal from collision avoidance
+            for i in range(len(arrived)):
+                self._uavs.pop(arrived[-(i+1)])
+                id = self._uavs_idx.pop(arrived[-(i+1)])
+                self._navigators[self._uavs_idx[id]].setDroneVel([0,0,0]])
+                rospy.loginfo("Drone %s at destination, stopping.", str(id))
+
+            # Check conflicts and solve them
+            if detect_collisions_on_time_interval(self._uavs, self._time_horizon):
+
+                directions = [uav.generate_directions2D_randomly(self._max_deviation, self._k) for uav in self._uavs]
+                
+				result, no = ac_method(self._uavs, directions, cost_function, detect_method)
+
+                if not result:
+                    rospy.logwarn("No solution for conflict found. Stopping.")
+
+                    break
+
+                for uav, d in result:
+                    uav.direction = d
+
+            # Send velocities
+            for id,uav in enumerate(self._uavs):
+
+                vel = [uav.velocity*uav.direction[0],uav.velocity*uav.direction[1],uav.velocity*uav.direction[2]]
+                self._navigators[self._uavs_idx[id]].setDroneVel(vel)
+            
+            
+            rate.sleep()
+
+
+        # Stop UAVs just in case
+        for nav in self._navigators:
+            nav.setDroneVel([0,0,0])
+
+        print "\nPress a key to end the mission:\n"
+        key = raw_input(" >> ")
+    
+        rospy.loginfo("Landing drones.")
+        
+        for nav in self._navigators:
+            nav.land()
+
+
+if __name__== "__main__":
+
+    rospy.init_node('central_avoidance_node')
+
+    contrl = CentralController()
+    contrl.execute()        
+
+
