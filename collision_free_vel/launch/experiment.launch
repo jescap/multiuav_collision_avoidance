@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="conf_file" default="config.yaml"/>
+    <arg name="conf_file" default="$(find collision_free_vel)/config/config.yaml"/>
     <arg name="ns_prefix" default="uav_"/>
     
     <!-- Launch Gazebo simulation TODO: world location? -->
@@ -17,7 +17,6 @@
         <arg name="id" value="1"/>
         <arg name="material" value="Orange"/>
         <arg name="mode" value="sitl"/>
-        <arg name="ns_prefix" value="$(arg ns_prefix)"/>
     </include>
 
     <!-- Launch robot id=2 -->
@@ -25,7 +24,6 @@
         <arg name="id" value="2"/>
         <arg name="material" value="Indigo"/>
         <arg name="mode" value="sitl"/>
-        <arg name="ns_prefix" value="$(arg ns_prefix)"/>
     </include>
 
     <!-- Launch robot id=3 -->
@@ -33,7 +31,6 @@
         <arg name="id" value="3"/>
         <arg name="material" value="Blue"/>
         <arg name="mode" value="sitl"/>
-        <arg name="ns_prefix" value="$(arg ns_prefix)"/>
     </include>
 
     <!-- Launch robot id=4 -->
@@ -41,7 +38,6 @@
         <arg name="id" value="4"/>
         <arg name="material" value="Red"/>
         <arg name="mode" value="sitl"/>
-        <arg name="ns_prefix" value="$(arg ns_prefix)"/>
     </include>
 
 
@@ -74,8 +70,15 @@
     </node>
 
     <!-- Launch collision avoidance algorithm -->
-    <node pkg="collision_free_vel" type="centralized_avoidance.py" name="central_controller" output="screen">
+    <!--
+    <node pkg="collision_free_vel" type="central_avoidance_node.py" name="central_controller" output="screen">
         <rosparam command="load" file="$(arg conf_file)" />
+        <param name="uav_radius" type="double" value="5.0" />
+        <param name="n_directions" type="int" value="10" />
+        <param name="time_horizon" type="double" value="10" />
+        <param name="max_deviation" type="double" value="0.785" />
+        <param name="rate" type="double" value="10" />
+        <param name="nominal_speed" type="double" value="1.0" />
     </node>
-    
+    -->
 </launch>
