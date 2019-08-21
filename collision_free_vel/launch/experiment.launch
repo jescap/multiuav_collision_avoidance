@@ -2,6 +2,8 @@
 
     <arg name="conf_file" default="$(find collision_free_vel)/config/config.yaml"/>
     <arg name="ns_prefix" default="uav_"/>
+    <arg name="backend" default="light"/>
+
     
     <!-- Launch Gazebo simulation TODO: world location? -->
     <node pkg="px4_bringup" type="launch_gzworld.py" name="gazebo_world" output="screen"
@@ -13,60 +15,80 @@
         - udp: for udp connection to px4
     -->
 	 <!-- Launch robot id=1 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch">
+    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)1">
         <arg name="id" value="1"/>
         <arg name="material" value="Orange"/>
         <arg name="mode" value="sitl"/>
+        <arg name="x" value="10.0"/>
+        <arg name="y" value="10"/>
+        <arg name="z" value="0"/>
+        <arg name="yaw" value="3.141592"/>
     </include>
 
     <!-- Launch robot id=2 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch">
+    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)2">
         <arg name="id" value="2"/>
         <arg name="material" value="Indigo"/>
         <arg name="mode" value="sitl"/>
+        <arg name="x" value="-10.0"/>
+        <arg name="y" value="10"/>
+        <arg name="z" value="0"/>
+        <arg name="yaw" value="3.141592"/>
     </include>
 
     <!-- Launch robot id=3 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch">
+    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)3">
         <arg name="id" value="3"/>
         <arg name="material" value="Blue"/>
         <arg name="mode" value="sitl"/>
+        <arg name="x" value="10.0"/>
+        <arg name="y" value="-10.0"/>
+        <arg name="z" value="0"/>
+        <arg name="yaw" value="3.141592"/>
     </include>
 
     <!-- Launch robot id=4 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch">
+    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)4">
         <arg name="id" value="4"/>
         <arg name="material" value="Red"/>
         <arg name="mode" value="sitl"/>
+        <arg name="x" value="-10.0"/>
+        <arg name="y" value="-10.0"/>
+        <arg name="z" value="0"/>
+        <arg name="yaw" value="3.141592"/>
     </include>
 
 
  	 <!-- Launch UAL server for drone id=1 -->
-    <node pkg="uav_abstraction_layer" type="server" name="server_1" output="screen">
+    <node pkg="uav_abstraction_layer" type="server" name="ual"  ns="$(arg ns_prefix)1" output="screen">
         <param name="uav_id" value="1"/>
-        <param name="ns_prefix" value="$(arg ns_prefix)"/>
+        <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
+        <rosparam param="home_pose">[10.0, 10.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
 
     <!-- Launch UAL server for drone id=2 -->
-    <node pkg="uav_abstraction_layer" type="server" name="server_2" output="screen">
+    <node pkg="uav_abstraction_layer" type="server" name="ual"  ns="$(arg ns_prefix)2" output="screen">
         <param name="uav_id" value="2"/>
-        <param name="ns_prefix" value="$(arg ns_prefix)"/>
+        <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
+        <rosparam param="home_pose">[-10.0, 10.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
     
     <!-- Launch UAL server for drone id=3 -->
-    <node pkg="uav_abstraction_layer" type="server" name="server_3" output="screen">
+    <node pkg="uav_abstraction_layer" type="server" name="ual"  ns="$(arg ns_prefix)3" output="screen">
         <param name="uav_id" value="3"/>
-        <param name="ns_prefix" value="$(arg ns_prefix)"/>
+        <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
+        <rosparam param="home_pose">[10.0, -10.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
 
     <!-- Launch UAL server for drone id=4 -->
-    <node pkg="uav_abstraction_layer" type="server" name="server_4" output="screen">
+    <node pkg="uav_abstraction_layer" type="server" name="ual"  ns="$(arg ns_prefix)4" output="screen">
         <param name="uav_id" value="4"/>
-        <param name="ns_prefix" value="$(arg ns_prefix)"/>
+        <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
+        <rosparam param="home_pose">[-10.0, -10, 0]</rosparam><!-- [x,y,z] -->
     </node>
 
     <!-- Launch collision avoidance algorithm -->
