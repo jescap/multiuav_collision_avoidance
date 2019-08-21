@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="conf_file" default="$(find collision_free_vel)/config/config.yaml"/>
+    <arg name="conf_file" default="$(find collision_free_vel)/conf/config.yaml"/>
     <arg name="ns_prefix" default="uav_"/>
     <arg name="backend" default="light"/>
 
@@ -26,9 +26,9 @@
 	<node pkg="px4_bringup" type="spawn_gzmodel.py" name="spawn_gzmodel_3" output="screen"
         args="-model=mbzirc -id=3 -material=ZincYellow -backend=$(arg backend) -x 10 -y -10 -z 0 -Y 0"/>
      <!-- Launch robot id=4 -->
-    <node pkg="px4_bringup" type="spawn_gzmodel.py" name="spawn_gzmodel_4" output="screen"
+    <!--<node pkg="px4_bringup" type="spawn_gzmodel.py" name="spawn_gzmodel_4" output="screen"
         args="-model=mbzirc -id=4 -material=Blue -backend=$(arg backend) -x -10 -y -10 -z 0 -Y 0"/>
-
+    -->
 	 
 
  	 <!-- Launch UAL server for drone id=1 -->
@@ -55,16 +55,17 @@
         <rosparam param="home_pose">[10.0, -10.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
 
+
     <!-- Launch UAL server for drone id=4 -->
-    <node pkg="uav_abstraction_layer" type="server" name="ual"  ns="$(arg ns_prefix)4" output="screen">
+<!--    <node pkg="uav_abstraction_layer" type="server" name="ual"  ns="$(arg ns_prefix)4" output="screen">
         <param name="uav_id" value="4"/>
         <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
-        <rosparam param="home_pose">[-10.0, -10, 0]</rosparam><!-- [x,y,z] -->
+        <rosparam param="home_pose">[-10.0, -10, 0]</rosparam>
     </node>
-
+-->
     <!-- Launch collision avoidance algorithm -->
-    <!--
+    
     <node pkg="collision_free_vel" type="central_avoidance_node.py" name="central_controller" output="screen">
         <rosparam command="load" file="$(arg conf_file)" />
         <param name="uav_radius" type="double" value="5.0" />
@@ -74,5 +75,5 @@
         <param name="rate" type="double" value="10" />
         <param name="nominal_speed" type="double" value="1.0" />
     </node>
-    -->
+    
 </launch>

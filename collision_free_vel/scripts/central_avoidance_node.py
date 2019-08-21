@@ -89,7 +89,7 @@ class CentralController:
             # Create drone navigators
             self._navigators = []
             for i in range(self._n_drones):
-                self._navigators.append(DroneNavigator('uav_' + str(i+1), self._heights[i])
+                self._navigators.append(DroneNavigator('uav_' + str(i+1), self._heights[i]))
 
 
             # Reading algorithm parameters
@@ -146,7 +146,7 @@ class CentralController:
             for i in range(len(arrived)):
                 self._uavs.pop(arrived[-(i+1)])
                 id = self._uavs_idx.pop(arrived[-(i+1)])
-                self._navigators[self._uavs_idx[id]].setDroneVel([0,0,0]])
+                self._navigators[self._uavs_idx[id]].setDroneVel([0,0,0])
                 rospy.loginfo("Drone %s at destination, stopping.", str(id))
 
             # Check conflicts and solve them
@@ -154,8 +154,8 @@ class CentralController:
 
                 directions = [uav.generate_directions2D_randomly(self._max_deviation, self._k) for uav in self._uavs]
                 
-				result, no = ac_method(self._uavs, directions, cost_function, detect_method)
-
+				#result,no = ac_method(self._uavs, directions, cost_function, detect_method)
+                result = []
                 if not result:
                     rospy.logwarn("No solution for conflict found. Stopping.")
 

@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="conf_file" default="$(find collision_free_vel)/config/config.yaml"/>
+    <arg name="conf_file" default="$(find collision_free_vel)/conf/config.yaml"/>
     <arg name="ns_prefix" default="uav_"/>
     <arg name="backend" default="mavros"/>
 
