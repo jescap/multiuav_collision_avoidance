@@ -23,13 +23,14 @@ class DroneNavigator:
         self._vel.twist.linear.x = vel[0]
         self._vel.twist.linear.y = vel[1]
         self._vel.twist.linear.z = vel[2]
-        self._vel_pub(self._vel)    
+        self._vel_pub.publish(self._vel)    
 
     #class initialization
     def __init__(self, id, height):
         
         self._id = id
         self._height = height
+        self._pose = PoseStamped()
 
         self._vel = TwistStamped()
         self._vel_pub = rospy.Publisher(self._id + '/ual/set_velocity',TwistStamped,queue_size=1)
@@ -132,10 +133,7 @@ class CentralController:
             for id,uav in enumerate(self._uavs):
 
                 pos = self._navigators[self._uavs_idx[id]].getDronePose()
-                uav.position[0] = pos.pose.position.x
-                uav.position[1] = pos.pose.position.y
-                uav.position[2] = pos.pose.position.z
-
+                uav.position = (pos.pose.position.x,pos.pose.position.y,pos.pose.position.z)
                 uav.direction = uav.get_optimal_direction()
 
                 # Check drones at goal

@@ -65,7 +65,7 @@
     </node>
 -->
     <!-- Launch collision avoidance algorithm -->
-    
+    <!--
     <node pkg="collision_free_vel" type="central_avoidance_node.py" name="central_controller" output="screen">
         <rosparam command="load" file="$(arg conf_file)" />
         <param name="uav_radius" type="double" value="5.0" />
@@ -75,5 +75,5 @@
         <param name="rate" type="double" value="10" />
         <param name="nominal_speed" type="double" value="1.0" />
     </node>
-    
+    -->
 </launch>
