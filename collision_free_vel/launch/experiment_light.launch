@@ -2,7 +2,7 @@
 
     <arg name="conf_file" default="$(find collision_free_vel)/config/config.yaml"/>
     <arg name="ns_prefix" default="uav_"/>
-    <arg name="backend" default="mavros"/>
+    <arg name="backend" default="light"/>
 
     
     <!-- Launch Gazebo simulation TODO: world location? -->
@@ -15,52 +15,23 @@
         - serial: for serial connection to px4
         - udp: for udp connection to px4
     -->
-	 <!-- Launch robot id=1 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)1">
-        <arg name="id" value="1"/>
-        <arg name="material" value="Orange"/>
-        <arg name="mode" value="sitl"/>
-        <arg name="x" value="10.0"/>
-        <arg name="y" value="10"/>
-        <arg name="z" value="0"/>
-        <arg name="yaw" value="3.141592"/>
-    </include>
+    	 <!-- Launch robot id=1 -->
+    <node pkg="px4_bringup" type="spawn_gzmodel.py" name="spawn_gzmodel_1" output="screen"
+        args="-model=mbzirc -id=1 -material=Orange -backend=$(arg backend) -x 10.0 -y 10.0 -z 0 -Y 0"/>
 
-    <!-- Launch robot id=2 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)2">
-        <arg name="id" value="2"/>
-        <arg name="material" value="Indigo"/>
-        <arg name="mode" value="sitl"/>
-        <arg name="x" value="-10.0"/>
-        <arg name="y" value="10"/>
-        <arg name="z" value="0"/>
-        <arg name="yaw" value="3.141592"/>
-    </include>
+        <!-- Launch robot id=2 -->
+	<node pkg="px4_bringup" type="spawn_gzmodel.py" name="spawn_gzmodel_2" output="screen"
+        args="-model=mbzirc -id=2 -material=Indigo -backend=$(arg backend) -x -10 -y 10 -z 0 -Y 0"/>
+        <!-- Launch robot id=3 -->
+	<node pkg="px4_bringup" type="spawn_gzmodel.py" name="spawn_gzmodel_3" output="screen"
+        args="-model=mbzirc -id=3 -material=ZincYellow -backend=$(arg backend) -x 10 -y -10 -z 0 -Y 0"/>
+     <!-- Launch robot id=4 -->
+    <node pkg="px4_bringup" type="spawn_gzmodel.py" name="spawn_gzmodel_4" output="screen"
+        args="-model=mbzirc -id=4 -material=Blue -backend=$(arg backend) -x -10 -y -10 -z 0 -Y 0"/>
 
-    <!-- Launch robot id=3 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)3">
-        <arg name="id" value="3"/>
-        <arg name="material" value="ZincYellow"/>
-        <arg name="mode" value="sitl"/>
-        <arg name="x" value="10.0"/>
-        <arg name="y" value="-10.0"/>
-        <arg name="z" value="0"/>
-        <arg name="yaw" value="3.141592"/>
-    </include>
+	 
 
-    <!-- Launch robot id=4 -->
-    <include file="$(find px4_bringup)/launch/spawn_robot.launch" ns="$(arg ns_prefix)4">
-        <arg name="id" value="4"/>
-        <arg name="material" value="Blue"/>
-        <arg name="mode" value="sitl"/>
-        <arg name="x" value="-10.0"/>
-        <arg name="y" value="-10.0"/>
-        <arg name="z" value="0"/>
-        <arg name="yaw" value="3.141592"/>
-    </include>
-
-
- 	<!-- Launch UAL server for drone id=1 -->
+ 	 <!-- Launch UAL server for drone id=1 -->
     <node pkg="uav_abstraction_layer" type="server" name="ual"  ns="$(arg ns_prefix)1" output="screen">
         <param name="uav_id" value="1"/>
         <param name="backend" value="$(arg backend)"/>
