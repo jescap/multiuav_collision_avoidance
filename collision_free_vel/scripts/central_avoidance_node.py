@@ -114,7 +114,6 @@ class CentralController:
         detect_method = lambda UAV1, d1, UAV2, d2 : is_collision_on_interval(UAV1, d1, UAV2, d2, self._time_horizon)
         cost_function = lambda x, y: abs(vector2angles(x)[0] -  vector2angles(y)[0])
         vect_dist = vectors_distance_by_components
-        ac_method = bf_minimize_max_deviation
 
         # Takeoff drones
         rospy.loginfo("Taking off drones.")
@@ -126,6 +125,10 @@ class CentralController:
         key = raw_input(" >> ")
     
         rate = rospy.Rate(self._rate) 
+
+        n_counts = 0
+        avg_time = 0.0
+
         while self._uavs and not rospy.is_shutdown():
             
             # Update UAVs positions
@@ -150,10 +153,16 @@ class CentralController:
             # Check conflicts and solve them
             if detect_collisions_on_time_interval(self._uavs, self._time_horizon):
 
+                time = rospy.Time.now()
+
                 directions = [uav.generate_directions2D_randomly(self._max_deviation, self._k) for uav in self._uavs]
                 
-				#result,no = ac_method(self._uavs, directions, cost_function, detect_method)
-                result = []
+                result,no = bf_minimize_max_deviation(self._uavs, directions, cost_function, detect_method)
+               
+                time = rospy.Time.now() - time
+                n_counts += 1
+                avg_time += time.to_sec()
+
                 if not result:
                     rospy.logwarn("No solution for conflict found. Stopping.")
 
@@ -175,6 +184,11 @@ class CentralController:
         # Stop UAVs just in case
         for nav in self._navigators:
             nav.setDroneVel([0,0,0])
+
+        if(n_counts > 0):
+            avg_time = avg_time/n_counts
+        
+        print "Average computation time: " + str(avg_time) + " for " + str(n_counts) + " calls\n"
 
         print "\nPress a key to end the mission:\n"
         key = raw_input(" >> ")

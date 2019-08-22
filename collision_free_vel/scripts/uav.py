@@ -12,6 +12,14 @@ class UAV:
         self.direction = get_normalized_vector(direction)
         self.goal_point = goal_point
 
+    def __str__(self):
+        result = "\nPosition: " + str(self.position)
+        result += "\nVelocity: " + str(self.velocity)
+        result += "\nRadio: " + str(self.radio)
+        result += "\nDirection: " + str(self.direction)
+        result += "\nGoal: " + str(self.goal_point)
+        return result
+        
     def position_after_t(self, time, epsilon = 10**-6):
 
         px, py, pz = self.position
