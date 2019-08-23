@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Pose3
       Splitter Ratio: 0.5
     Tree Height: 435
   - Class: rviz/Selection
@@ -93,6 +92,126 @@ Visualization Manager:
       Shape: Axes
       Topic: /uav_3/ual/pose
       Unreliable: false
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_1/cylinder_marker
+      Name: Cylinder1
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_1/goal_marker
+      Name: Goal1
+      Namespaces:
+        uavs_state: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_1/id_marker
+      Name: Id1
+      Namespaces:
+        uavs_state: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_1/pose_marker
+      Name: Drone1
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_1/vel_marker
+      Name: Vel1
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_2/cylinder_marker
+      Name: Cylinder2
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_2/goal_marker
+      Name: Goal2
+      Namespaces:
+        uavs_state: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_2/id_marker
+      Name: Id2
+      Namespaces:
+        uavs_state: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_2/pose_marker
+      Name: Drone2
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_2/vel_marker
+      Name: Vel2
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_3/cylinder_marker
+      Name: Cylinder3
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_3/goal_marker
+      Name: Goal3
+      Namespaces:
+        uavs_state: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_3/id_marker
+      Name: Id3
+      Namespaces:
+        uavs_state: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_3/pose_marker
+      Name: Drone3
+      Namespaces:
+        uavs: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /uav_3/vel_marker
+      Name: Vel3
+      Namespaces:
+        uavs: true
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:

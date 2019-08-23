@@ -1,0 +1,10 @@
+<launch>
+
+    <arg name="conf_file" default="$(find collision_free_vel)/conf/config.yaml"/>
+   
+    <node pkg="collision_free_vel" type="visualizer_node.py" name="visualizer" output="screen">
+        <rosparam command="load" file="$(arg conf_file)" />
+        <param name="uav_radius" type="double" value="3.0" />
+    </node>
+    
+</launch>

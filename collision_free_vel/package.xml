@@ -46,6 +46,8 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>rospy</depend>
   <depend>uav_abstraction_layer</depend>
+  <depend>geometry_msgs</depend>
+  <depend>visualization_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

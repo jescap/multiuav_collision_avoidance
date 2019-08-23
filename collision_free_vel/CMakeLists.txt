@@ -10,6 +10,8 @@ project(collision_free_vel)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   uav_abstraction_layer
+  geometry_msgs
+  visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -104,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES collision_free_velocities
-  CATKIN_DEPENDS rospy uav_abstraction_layer
+  CATKIN_DEPENDS rospy uav_abstraction_layer geometry_msgs visualization_msgs
 #  DEPENDS system_lib
 )
 

@@ -94,12 +94,13 @@ class CentralController:
 
 
             # Reading algorithm parameters
-            self._uav_radius = rospy.get_param('~uav_radius', 5.0)          # Radius of the UAVs
-            self._k = rospy.get_param('~n_directions', 10)                  # Number of directions per UAV
-            self._time_horizon = rospy.get_param('~time_horizon', 10)       # Time horizon (seconds)
-            self._max_deviation = rospy.get_param('~max_deviation', 0.785)  # Maximum deviation allowed (radians)
-            self._rate = rospy.get_param('~rate',10)                        # Node rate (Hz)
-            self._speed = rospy.get_param('~nominal_speed', 1.0)            # Nominal speed for UAVs (m/s)
+            self._uav_radius = rospy.get_param('~uav_radius', 3.0)            # Radius of the UAVs
+            self._k = rospy.get_param('~n_directions', 10)                    # Number of directions per UAV
+            self._time_horizon = rospy.get_param('~time_horizon', 10)         # Time horizon (seconds)
+            self._coll_det_time = rospy.get_param('~coll_detection_time', 5)  # Time to check conflicts again (seconds)
+            self._max_deviation = rospy.get_param('~max_deviation', 0.785)    # Maximum deviation allowed (radians)
+            self._rate = rospy.get_param('~rate',10)                          # Node rate (Hz)
+            self._speed = rospy.get_param('~nominal_speed', 1.0)               # Nominal speed for UAVs (m/s)
 
             # Create UAVs models
             self._uavs = []
@@ -128,6 +129,8 @@ class CentralController:
 
         n_counts = 0
         avg_time = 0.0
+        n_iterations = 0
+        max_iterations = self._rate*self._coll_det_time
 
         while self._uavs and not rospy.is_shutdown():
             
@@ -151,7 +154,9 @@ class CentralController:
                 rospy.loginfo("Drone %s at destination, stopping.", str(id))
 
             # Check conflicts and solve them
-            if detect_collisions_on_time_interval(self._uavs, self._time_horizon):
+            if n_iterations == 0 and detect_collisions_on_time_interval(self._uavs, self._time_horizon):
+
+                print "Checking conflicts\n"
 
                 time = rospy.Time.now()
 
@@ -168,16 +173,21 @@ class CentralController:
 
                     break
 
+                print "Solution found.\n"
                 for uav, d in result:
                     uav.direction = d
+                    print "Direction: " + str(d)
 
             # Send velocities
             for id,uav in enumerate(self._uavs):
 
                 vel = [uav.velocity*uav.direction[0],uav.velocity*uav.direction[1],uav.velocity*uav.direction[2]]
                 self._navigators[self._uavs_idx[id]].setDroneVel(vel)
-            
-            
+
+            n_iterations += 1
+            if n_iterations == max_iterations:
+                n_iterations = 0
+
             rate.sleep()
 
 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>visualization</name>
+  <name>experiments</name>
   <version>1.0.0</version>
-  <description>Visualization tools for the collision avoidance method.</description>
+  <description>Simulation and logging files for experiments with the collision avoidance method.</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -47,9 +47,10 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <depend>geometry_msgs</depend>
-  <depend>roscpp</depend>
-  <depend>visualization_msgs</depend>
+  <depend>rospy</depend>
+  <depend>uav_abstraction_layer</depend>
+  <exec_depend>px4_bringup</exec_depend>
+  <exec_depend>collision_free_vel</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
