@@ -10,6 +10,7 @@ project(experiments)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   uav_abstraction_layer
+  rosbag
 )
 
 ## System dependencies are found with CMake's conventions
@@ -104,7 +105,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES visualization
-  CATKIN_DEPENDS uav_abstraction_layer rospy
+  CATKIN_DEPENDS uav_abstraction_layer rospy rosbag
 #  DEPENDS system_lib
 )
 

@@ -49,6 +49,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>rospy</depend>
   <depend>uav_abstraction_layer</depend>
+  <depend>rosbag</depend>
   <exec_depend>px4_bringup</exec_depend>
   <exec_depend>collision_free_vel</exec_depend>
 
