@@ -1,4 +1,4 @@
-# ** multiuav_collision_avoidance ** #
+# **multiuav_collision_avoidance** #
 
 This repository containts an algorithm for collision avoidance between drones based on collision-free velocity assignment. The algorithm checks conflicts in a time windows in a centralized manner, assigning velocities that would avoid collsions in an optimal manner. The ROS package `collision_free_vel` contains the implementation of the algorithm, while the package `experiments` contains files to run simulations or actual experiments for testing and processing results.
 
