@@ -1,29 +1,25 @@
+
 from auxiliar_functions import provoke_collisions
 
-# Compute all feasible solutions and choose the optimum minimizing the maximum deviation
+# Calcula todas las soluciones factibles y escoge la optima segun el criterio de minimizar la maxima desviacion
 def bf_minimize_max_deviation(UAVs, directions_list, cost_function, detect_collision_method):
 
-    # Criterion to minimize the maximum deviation
     def criteria(uavs):
         return max([cost_function(uav.direction, d) for uav, d in uavs])
 
-    # list with all feasible solutions
     result_list = optimize_brute_force(UAVs, directions_list, 0, [], [], detect_collision_method)
     result_list.sort(key= lambda x: criteria(x))
 
-    # keep solutions with the same maximum deviation
     result = []
     for i in range(1,len(result_list)):
         if criteria(result_list[i]) != criteria(result_list[i-1]):
             break
         result.append(result_list[i])
 
-    # Criterion to choose according to the minimum sum of deviations
     def criteria2(uavs):
         return sum([cost_function(uav.direction, d) for uav, d in uavs])
 
-    # return from solutions with equal maximum deviation, the one with minimum sum of deviations 
-    return select_optimum(result, criteria2), len(result)
+    return select_optimum(result, criteria2), len(result_list)
 
 
 def optimize_brute_force(UAVs, directions_list, index, result, result_list, detect_collision_method):
@@ -39,9 +35,8 @@ def optimize_brute_force(UAVs, directions_list, index, result, result_list, dete
     return result_list
 
 
+
 def select_optimum(result_list, cost):
-    if not result_list:
-        return False
     costs = list(map(cost, result_list[:]))
     index = costs.index(min(costs))
     return result_list[index]
