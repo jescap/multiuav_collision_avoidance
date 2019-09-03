@@ -1,6 +1,8 @@
-from functions import get_normalized_vector, vector2angles, angles2vector, vectors_distance_by_components
+from auxiliar_functions import get_normalized_vector, vector2angles, angles2vector, vectors_distance_by_components
 from math import sqrt, pi, sin, cos, atan2, radians, degrees
 from random import uniform
+import numpy
+
 
 class UAV:
 
@@ -93,3 +95,53 @@ class UAV:
 
         directions.sort(key=lambda x: atan2(x[1], x[0]) % (2 * pi))
         return directions
+
+
+    def generate_free_obstacles_directions(self, k, obstacles):
+        angles = [angles2vector(radians(a)) for a in range(0, 360, 3) if not collide_with_any_obstacle(self, angles2vector(radians(a)), obstacles)]
+        angles.sort(key=lambda x: vectors_distance_by_components(x, self.direction))
+
+        return angles[:k]
+
+
+
+class Region:
+    # La region es un cubo en el espacio
+    def __init__(self, init_point, width, long, height):
+        self.init_point = init_point
+        self.width = width # ancho
+        self.long = long # largo
+        self.height = height # altura
+
+    def contains(self, point):
+        px, py, pz = self.init_point
+        x, y, z = point
+        return (px <= x <= px + self.width) and (py <= y <= py + self.width) and (pz <= z <= pz + self.width)
+
+
+class Obstacle:
+
+    def __init__(self, position, radio):
+        self.position = position
+        self.radio = radio
+
+
+
+
+if __name__ == "__main__":
+
+    from math import atan2, degrees
+
+    uav = UAV((1,1,0), 1, 1, (1,0,0), (20,0,0))
+    o1 = Obstacle((4, 2, 0), 1)
+    o2 = Obstacle((6,0, 0), 1)
+    o3 = Obstacle((-5, 1, 0), 2)
+    print([degrees(vector2angles(v)[0]) for v in uav.generate_free_obstacles_directions(40, [o1])])
+
+
+    # angles = [vector2angles(v) for v in uav.generate_directions_by_span_angles(pi/2, pi/2, 25)]
+    # angles = [(degrees(a1), degrees(a2)) for a1, a2, _ in angles]
+    # print(angles)
+
+    # print(uav.get_optimal_direction())
+
