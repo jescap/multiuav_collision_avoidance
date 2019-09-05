@@ -160,7 +160,7 @@ class CentralController:
 
                 time = rospy.Time.now()
 
-                directions = [uav.generate_directions2D_randomly(self._max_deviation, self._k) for uav in self._uavs]
+                directions = [uav.generate_directions2D(self._max_deviation, self._k) for uav in self._uavs]
                 
                 result,no = bf_minimize_max_deviation(self._uavs, directions, cost_function, detect_method)
                
