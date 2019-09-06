@@ -149,9 +149,9 @@ class CentralController:
             # Removed drones at goal from collision avoidance
             for i in range(len(arrived)):
                 self._uavs.pop(arrived[-(i+1)])
-                id = self._uavs_idx.pop(arrived[-(i+1)])
-                self._navigators[self._uavs_idx[id]].setDroneVel([0,0,0])
-                rospy.loginfo("Drone %s at destination, stopping.", str(id))
+                idx = self._uavs_idx.pop(arrived[-(i+1)])
+                self._navigators[idx].setDroneVel([0,0,0])
+                rospy.loginfo("Drone %s at destination, stopping.", str(idx))
 
             # Check conflicts and solve them
             if n_iterations == 0 and detect_collisions_on_time_interval(self._uavs, self._time_horizon):

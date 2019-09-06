@@ -19,8 +19,8 @@
         <arg name="id" value="1"/>
         <arg name="material" value="Orange"/>
         <arg name="mode" value="sitl"/>
-        <arg name="x" value="10.0"/>
-        <arg name="y" value="10"/>
+        <arg name="x" value="-22.5"/>
+        <arg name="y" value="-25.0"/>
         <arg name="z" value="0"/>
         <arg name="yaw" value="3.141592"/>
     </include>
@@ -30,8 +30,8 @@
         <arg name="id" value="2"/>
         <arg name="material" value="Indigo"/>
         <arg name="mode" value="sitl"/>
-        <arg name="x" value="-10.0"/>
-        <arg name="y" value="10"/>
+        <arg name="x" value="-7.5"/>
+        <arg name="y" value="-25.0"/>
         <arg name="z" value="0"/>
         <arg name="yaw" value="3.141592"/>
     </include>
@@ -41,8 +41,8 @@
         <arg name="id" value="3"/>
         <arg name="material" value="ZincYellow"/>
         <arg name="mode" value="sitl"/>
-        <arg name="x" value="10.0"/>
-        <arg name="y" value="-10.0"/>
+        <arg name="x" value="7.5"/>
+        <arg name="y" value="-25.0"/>
         <arg name="z" value="0"/>
         <arg name="yaw" value="3.141592"/>
     </include>
@@ -52,8 +52,8 @@
         <arg name="id" value="4"/>
         <arg name="material" value="Blue"/>
         <arg name="mode" value="sitl"/>
-        <arg name="x" value="-10.0"/>
-        <arg name="y" value="-10.0"/>
+        <arg name="x" value="22.5"/>
+        <arg name="y" value="-25.0"/>
         <arg name="z" value="0"/>
         <arg name="yaw" value="3.141592"/>
     </include>
@@ -64,7 +64,7 @@
         <param name="uav_id" value="1"/>
         <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
-        <rosparam param="home_pose">[10.0, 10.0, 0]</rosparam><!-- [x,y,z] -->
+        <rosparam param="home_pose">[-22.5, -25.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
 
     <!-- Launch UAL server for drone id=2 -->
@@ -72,7 +72,7 @@
         <param name="uav_id" value="2"/>
         <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
-        <rosparam param="home_pose">[-10.0, 10.0, 0]</rosparam><!-- [x,y,z] -->
+        <rosparam param="home_pose">[-7.5, -25.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
     
     <!-- Launch UAL server for drone id=3 -->
@@ -80,7 +80,7 @@
         <param name="uav_id" value="3"/>
         <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
-        <rosparam param="home_pose">[10.0, -10.0, 0]</rosparam><!-- [x,y,z] -->
+        <rosparam param="home_pose">[7.5, -25.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
 
     <!-- Launch UAL server for drone id=4 -->
@@ -88,7 +88,7 @@
         <param name="uav_id" value="4"/>
         <param name="backend" value="$(arg backend)"/>
         <param name="pose_frame_id" value="map"/>
-        <rosparam param="home_pose">[-10.0, -10, 0]</rosparam><!-- [x,y,z] -->
+        <rosparam param="home_pose">[22.5, -25.0, 0]</rosparam><!-- [x,y,z] -->
     </node>
 
 </launch>
