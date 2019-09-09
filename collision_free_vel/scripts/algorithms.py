@@ -37,6 +37,8 @@ def optimize_brute_force(UAVs, directions_list, index, result, result_list, dete
 
 
 def select_optimum(result_list, cost):
+    if not len(result_list): 
+        return False
     costs = list(map(cost, result_list[:]))
     index = costs.index(min(costs))
     return result_list[index]
