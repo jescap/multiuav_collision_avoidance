@@ -161,29 +161,32 @@ class CentralController:
                 rospy.loginfo("Drone %s at destination, stopping.", str(idx))
 
             # Check conflicts and solve them
-            if n_iterations == 0 and detect_collisions_on_time_interval(self._uavs, self._time_horizon):
+            if n_iterations == 0:
+            
+                print "Checking conflicts\n" 
+                if detect_collisions_on_time_interval(self._uavs, self._time_horizon):
 
-                print "Checking conflicts\n"
+                    print "Solving conflicts\n"
 
-                time = rospy.Time.now()
+                    time = rospy.Time.now()
 
-                directions = [uav.generate_directions2D(self._max_deviation, self._k) for uav in self._uavs]
+                    directions = [uav.generate_directions2D(self._max_deviation, self._k) for uav in self._uavs]
+                    
+                    result,no = bf_minimize_max_deviation(self._uavs, directions, cost_function, detect_method)
                 
-                result,no = bf_minimize_max_deviation(self._uavs, directions, cost_function, detect_method)
-               
-                time = rospy.Time.now() - time
-                n_counts += 1
-                avg_time += time.to_sec()
+                    time = rospy.Time.now() - time
+                    n_counts += 1
+                    avg_time += time.to_sec()
 
-                if not result:
-                    rospy.logwarn("No solution for conflict found. Stopping.")
+                    if not result:
+                        rospy.logwarn("No solution for conflict found. Stopping.")
 
-                    break
+                        break
 
-                print "Solution found.\n"
-                for uav, d in result:
-                    uav.direction = d
-                    print "Direction: " + str(d)
+                    print "Solution found.\n"
+                    for uav, d in result:
+                        uav.direction = d
+                        print "Direction: " + str(d)
 
             # Send velocities
             for id,uav in enumerate(self._uavs):

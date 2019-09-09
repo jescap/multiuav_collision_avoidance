@@ -6,9 +6,9 @@
     
     <node pkg="collision_free_vel" type="central_avoidance_node.py" name="central_controller" output="screen">
         <rosparam command="load" file="$(arg conf_file)" />
-        <param name="uav_radius" type="double" value="3.0" />
-        <param name="n_directions" type="int" value="15" />
-        <param name="time_horizon" type="double" value="20" />
+        <param name="uav_radius" type="double" value="1.0" />
+        <param name="n_directions" type="int" value="10" />
+        <param name="time_horizon" type="double" value="5" />
         <param name="coll_detection_time" type="double" value="5" />
         <param name="max_deviation" type="double" value="0.7853" />
         <param name="rate" type="double" value="10" />
