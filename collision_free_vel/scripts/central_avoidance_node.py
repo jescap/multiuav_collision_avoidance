@@ -147,7 +147,6 @@ class CentralController:
 
                 pos = self._navigators[self._uavs_idx[id]].getDronePose()
                 uav.position = (pos.pose.position.x,pos.pose.position.y,pos.pose.position.z)
-                uav.direction = uav.get_optimal_direction()
 
                 # Check drones at goal
                 if(vect_dist(uav.position, uav.goal_point) < 1.5):
@@ -164,6 +163,11 @@ class CentralController:
             if n_iterations == 0:
             
                 print "Checking conflicts\n" 
+
+                # Point to goal
+                for uav in self._uavs:
+                    uav.direction = uav.get_optimal_direction()
+
                 if detect_collisions_on_time_interval(self._uavs, self._time_horizon):
 
                     print "Solving conflicts\n"
@@ -186,6 +190,7 @@ class CentralController:
                     print "Solution found.\n"
                     for uav, d in result:
                         uav.direction = d
+                        print "Position: " + str(uav.position)
                         print "Direction: " + str(d)
 
             # Send velocities
