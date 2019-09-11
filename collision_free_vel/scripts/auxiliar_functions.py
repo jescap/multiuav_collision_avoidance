@@ -59,9 +59,10 @@ def is_collision_on_interval(UAV1, d1, UAV2, d2, time_interval):
 
     if distance == None or distance > (UAV1.radio + UAV2.radio): return False
 
-    time_collision = sqrt(distance**2 + vect_dist(UAV1.position, UAV2.position)**2)/vector_norm(vector)
+    time_collision = sqrt(vect_dist(UAV1.position, UAV2.position)**2 - distance**2)/(vector_norm(vector)*UAV2.velocity)
     if time_collision > time_interval:
-        return False
+        p = (x+vector[i]*UAV2.velocity*time_interval for i, x in enumerate(UAV2.position))
+        return vectors_distance_by_components(p, UAV1.position) < (UAV1.radio + UAV2.radio)
 
     return True
 
