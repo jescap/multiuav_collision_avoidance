@@ -8,8 +8,9 @@ def bf_minimize_max_deviation(UAVs, directions_list, cost_function, detect_colli
         return max([cost_function(uav.direction, d) for uav, d in uavs])
 
     result_list = optimize_brute_force(UAVs, directions_list, 0, [], [], detect_collision_method)
+    if not len(result_list): return False
+    
     result_list.sort(key= lambda x: criteria(x))
-
     result, value = [result_list[0]], criteria(result_list[0])
     for i in range(1, len(result_list)):
         if criteria(result_list[i]) != value:
