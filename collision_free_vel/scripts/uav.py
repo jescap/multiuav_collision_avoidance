@@ -79,8 +79,9 @@ class UAV:
         for i in range(k):
             theta_i = (theta - span_theta_range + 2 * i * span_theta_range / k + span_theta_range / k) % (2 * pi)
             directions.append(angles2vector(theta_i))
-
-        directions.sort(key=lambda x: atan2(x[1], x[0]) % (2 * pi))
+        
+        directions.append(self.get_optimal_direction())
+        directions.sort(key=lambda x): atan2(x[1], x[0]) % (2 * pi))
         return directions
 
 
