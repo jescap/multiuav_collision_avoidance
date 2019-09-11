@@ -79,7 +79,7 @@ def simulate(UAVs, k, max_span_angle, time_interval, ac_method, epsilon=0.0):
                     arrive.append(i)
                     aux.append(i)
                     
-                    time_intersect = (uav.goal_point[1] - uav.position[1])/cos(abs(vector2angles(uav.direction)[0] - pi/2))
+                    time_intersect = ((uav.goal_point[1] - uav.position[1])/cos(abs(vector2angles(uav.direction)[0] - pi/2)))/uav.velocity
                     uav.position = uav.position_after_t(time_intersect)
                     deviation[uav] += time_intersect + abs(uav.position[0] - uav.goal_point[0])
 
