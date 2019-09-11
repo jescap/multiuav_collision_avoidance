@@ -61,7 +61,7 @@ def simulate(UAVs, k, max_span_angle, time_interval, ac_method, epsilon=0.0):
                 for uav, d in result:
                     uav.direction = d
 
-            arrive = []
+            arrive, aux = [], []
             for i, uav in enumerate(UAVs):
 
                 if epsilon:
@@ -77,6 +77,8 @@ def simulate(UAVs, k, max_span_angle, time_interval, ac_method, epsilon=0.0):
 
                 elif distance2_goal_line >= 0:
                     arrive.append(i)
+                    aux.append(i)
+                    
                     time_intersect = (uav.goal_point[1] - uav.position[1])/cos(abs(vector2angles(uav.direction)[0] - pi/2))
                     uav.position = uav.position_after_t(time_intersect)
                     deviation[uav] += time_intersect + abs(uav.position[0] - uav.goal_point[0])
@@ -89,6 +91,10 @@ def simulate(UAVs, k, max_span_angle, time_interval, ac_method, epsilon=0.0):
             for uav in UAVs:
                 dict_points[uav.goal_point][0].append(uav.position[0])
                 dict_points[uav.goal_point][1].append(uav.position[1])
+
+                if aux.__contains__(i):
+                    dict_points[uav.goal_point][0].append(uav.goal_point[0])
+                    dict_points[uav.goal_point][1].append(uav.goal_point[1])
 
             # Eliminar de la lista los UAVs que ya estan en su goal position
             for i in range(len(arrive)):
