@@ -1,4 +1,4 @@
-
+from random import shuffle
 from auxiliar_functions import provoke_collisions
 
 # Calcula todas las soluciones factibles y escoge la optima segun el criterio de minimizar la maxima desviacion

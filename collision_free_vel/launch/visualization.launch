@@ -4,7 +4,7 @@
    
     <node pkg="collision_free_vel" type="visualizer_node.py" name="visualizer" output="screen">
         <rosparam command="load" file="$(arg conf_file)" />
-        <param name="uav_radius" type="double" value="1.0" />
+        <param name="uav_radius" type="double" value="1.5" />
     </node>
     
 </launch>

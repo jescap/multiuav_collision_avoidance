@@ -81,7 +81,7 @@ class UAV:
             directions.append(angles2vector(theta_i))
         
         directions.append(self.get_optimal_direction())
-        directions.sort(key=lambda x): atan2(x[1], x[0]) % (2 * pi))
+        directions.sort(key=lambda x: atan2(x[1], x[0]) % (2 * pi))
         return directions
 
 
