@@ -5,7 +5,7 @@ import numpy as np
 
 import rosbag
 
-n_drones = 3
+n_drones = 4
 uav_poses = {}
 min_dist = -1.0
 travelled_distance = []
@@ -42,10 +42,12 @@ for topic, msg, t in bag.read_messages():
                 uav_found['/uav_'+str(i+1)+'/ual/pose'] = 0    
         
 # Process trajectories
+
 for id in range(n_drones):
     for j in range(1,len(uav_traj[id])):
-        x1,y1 = uav_traj[id][j][:2:]
-        x0,y0 = uav_traj[id][j-1][:2:]  
+
+        x1,y1,z1 = uav_traj[id][j]
+        x0,y0,z0 = uav_traj[id][j-1]  
         dist = sqrt((x0-x1)**2+(y0-y1)**2)
         travelled_distance[id] += dist
 
@@ -54,8 +56,8 @@ for step in range(len(uav_traj[0])):
         
     for id1 in range(n_drones-1):
         for id2 in range(id1+1,n_drones):
-            x1,y1 = uav_traj[id1][step][:2:]
-            x0,y0 = uav_traj[id2][step][:2:]  
+            x1,y1,z1 = uav_traj[id1][step]
+            x0,y0,z0 = uav_traj[id2][step]  
             dist = sqrt((x0-x1)**2+(y0-y1)**2)
             if d_min == -1 or dist < d_min:
                 d_min = dist 
@@ -69,19 +71,22 @@ for id in range(n_drones):
 UAV1 = np.array(uav_traj[0][:])
 UAV2 = np.array(uav_traj[1][:])
 UAV3 = np.array(uav_traj[2][:])
+UAV4 = np.array(uav_traj[3][:])
 
 plt.plot(UAV1[:,0], UAV1[:,1], 'r-', label='UAV 1')
 plt.plot(UAV2[:,0], UAV2[:,1], 'b-', label='UAV 2')
 plt.plot(UAV3[:,0], UAV3[:,1], 'g-', label='UAV 3')
+plt.plot(UAV4[:,0], UAV4[:,1], 'm-', label='UAV 4')
 plt.plot(UAV1[-1,0], UAV1[-1,1], 'r*')
 plt.plot(UAV2[-1,0], UAV2[-1,1], 'b*')
 plt.plot(UAV3[-1,0], UAV3[-1,1], 'g*')
+plt.plot(UAV4[-1,0], UAV4[-1,1], 'm*')
 
 plt.xlabel('X (m)')
 plt.ylabel('Y (m)')
 
 plt.title("UAV Trajectories")
-plt.legend()
+#plt.legend()
 plt.show()
 
 bag.close()
