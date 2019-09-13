@@ -80,11 +80,11 @@ class CentralController:
             self._goals = rospy.get_param('~goals')
 
             ## For experimental test. Permutation of goals
-            perm = [2, 3, 0, 1]
-            goals_aux = self._goals
-            self._goals = []
-            for i in range(self._n_drones):
-                self._goals.append(goals_aux[perm[i]])
+            #perm = [2, 3, 0, 1]
+            #goals_aux = self._goals
+            #self._goals = []
+            #for i in range(self._n_drones):
+            #    self._goals.append(goals_aux[perm[i]])
         else:
             conf_error = True
         
